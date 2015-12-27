@@ -1,0 +1,22 @@
+{
+  "name": "node_crud",
+  "version": "0.0.1",
+  "description": "Basic CRUD app running on express.",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "bunyan": "^1.5.1",
+    "express": "^4.13.3",
+    "express-cors": "0.0.3",
+    "express-session": "^1.12.1",
+    "nconf": "^0.8.2",
+    "underscore": "^1.8.3",
+    "validator": "^4.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node app.js"
+  },
+  "author": "Anton Kravchenko",
+  "license": "ISC"
+}

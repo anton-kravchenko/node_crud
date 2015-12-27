@@ -1,0 +1,7 @@
+api/node_modules
+client/node_modules
+*.log
+*.txt
+.idea
+*.iml
+api/workspace.xml
