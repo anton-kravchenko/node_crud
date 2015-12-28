@@ -9,6 +9,9 @@
     "express": "^4.13.3",
     "express-cors": "0.0.3",
     "express-session": "^1.12.1",
+    "mongodb-uri": "^0.9.7",
+    "mongoose": "^4.3.4",
+    "mongoose-auto-increment": "^5.0.1",
     "nconf": "^0.8.2",
     "underscore": "^1.8.3",
     "validator": "^4.4.0"
