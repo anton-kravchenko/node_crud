@@ -8,6 +8,11 @@
         "password_salt": "",
         "session_secret": "123"
     },
+    "mongo_db" : {
+        "host" : "ds037205.mongolab.com",
+        "port" : "37205",
+        "db_name" : "node_crud"
+    },
     "frontend" : {
         "host" : "http://localhost:3333"
     },

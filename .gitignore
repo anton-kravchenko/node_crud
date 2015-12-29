@@ -1,4 +1,5 @@
 api/node_modules
+api/env.sh
 client/node_modules
 *.log
 *.txt
