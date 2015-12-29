@@ -32,10 +32,23 @@ module.exports = function(nconf, log, callback){
 
 	db.once('open', function () {
 		mongo_log.info('Open ' + nconf.get('mongo_db:db_name') + ' connection.');
-	  
-		// Create Customer schema
+
 		var Schema = mongoose.Schema;
+	  	var userSchema = new Schema({
+	  		_id		 : Schema.Types.ObjectId,
+	  		email	 : String, 
+	  		password : String, 
+	  		salt	 : String,
+
+	  		customers : [{ type: Schema.Types.ObjectId, ref: 'customers' }]
+	  	});
+		
+		userSchema.plugin(autoIncrement.plugin, 'User');
+		var Users = mongoose.model('User', userSchema);
+
+
 		var customerSchema = new Schema({
+			_creator    : { type: Number, ref: 'User' },
 			id			: Schema.Types.ObjectId,
 			firstName	: String, 
 			lastName	: String, 
@@ -48,8 +61,9 @@ module.exports = function(nconf, log, callback){
 			skype		: String,
 		});
 
-		customerSchema.plugin(autoIncrement.plugin, 'customers')
-		var Customer = mongoose.model('customers', customerSchema);
-		callback(undefined, Customer);
+		customerSchema.plugin(autoIncrement.plugin, 'Customer')
+		var Customers = mongoose.model('Customer', customerSchema);
+
+		callback(undefined, Users);
 	}
 )};
