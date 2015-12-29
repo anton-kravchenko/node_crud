@@ -9,6 +9,7 @@ var Router = function(server, options) {
     // type
     self.String = 1;
     self.Integer = 2;
+    self.Date = 3;
     
     // where
     self.Params = 1;
