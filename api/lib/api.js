@@ -158,11 +158,21 @@ API.prototype.createCustomer = function(user_id, firstName, lastName, dateOfBirt
 
 }
 
-API.prototype.getAllCustomers = function(user_id, note_text, note_date, callback) {
+API.prototype.getAllCustomers = function(user_id, callback) {
     var self = this;
 
     _requireAuthorization(user_id, callback, function(){
-
+        self.model.Customers.find( {'_creator' : user_id}, function(err, customers){
+            if (customers) {
+                callback(undefined, { customersCount : customers.length, customers : customers });
+            } else {
+                var error = errors.create('cant_get_cusomers_list', 'Get all customers error.', {
+                    code: 403
+                });
+                console.log(error);
+                callback(error);
+            }
+        });
     });
 
 }
