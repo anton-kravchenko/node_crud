@@ -55,9 +55,8 @@ module.exports = function(nconf, log, callback){
 			id			: Schema.Types.ObjectId,
 			firstName	: String, 
 			lastName	: String, 
-			dateOfBirth	: Date,
+			dateOfBirth	: String,
 
-			companyName	: String, 
 			mobilePhone	: String, 
 			workPhone	: String, 
 			companyName	: String, 

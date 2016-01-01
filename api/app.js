@@ -95,7 +95,7 @@ init_api(nconf, log, function (error, api) {
         parameters: {
             firstName: 	 router.String,
             lastName:    router.String,
-            dateOfBirth: router.Date,
+            dateOfBirth: router.String,
             companyName: router.String,
             mobilePhone: router.String,
             workPhone: 	 router.String,
@@ -107,6 +107,7 @@ init_api(nconf, log, function (error, api) {
         							'dateOfBirth', 
         							'companyName', 
         							'mobilePhone',
+                                    'workPhone',
         							'skype']
     });
 

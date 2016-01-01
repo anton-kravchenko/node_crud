@@ -133,11 +133,27 @@ API.prototype.register = function(username, email, password, callback) {
     });
 }
 
-API.prototype.createCustomer = function(user_id, note_text, note_date, callback) {
+API.prototype.createCustomer = function(user_id, firstName, lastName, dateOfBirth, mobilePhone, workPhone, companyName, skype, callback) {
     var self = this;
-
     _requireAuthorization(user_id, callback, function(){
-
+        self.model.Customers.create({   _creator : user_id,
+                                        firstName : firstName,
+                                        lastName : lastName,
+                                        dateOfBirth: dateOfBirth,
+                                        mobilePhone: mobilePhone,
+                                        workPhone: workPhone,
+                                        companyName: companyName,
+                                        skype: skype
+        }, function (err, user) {
+            if (err) {
+                var error = errors.create('incorrect_customer_data', 'Customer create error', {
+                    code: 403
+                });
+                callback(error);
+            } else {
+                callback(undefined, user);
+            }
+        });
     });
 
 }
