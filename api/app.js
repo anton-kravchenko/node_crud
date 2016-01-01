@@ -16,18 +16,18 @@ nconf
     .file({file: './defaults.json'});
 
 var log = bunyan.createLogger({
-    name: package_json['name'],
-    streams: [
-        {
-            level: 'info',
-            stream: process.stdout
-        },
-        {
-            level: nconf.get('log:level'),
-            type: 'rotating-file',
-            path: nconf.get('log:path')
-        }
-    ]
+   name: package_json['name'],
+   streams: [
+       {
+           level: 'info',
+           stream: process.stdout
+       },
+       {
+           level: nconf.get('log:level'),
+           type: 'rotating-file',
+           path: nconf.get('log:path')
+       }
+   ]
 });
 
 init_api(nconf, log, function (error, api) {

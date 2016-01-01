@@ -1,8 +1,12 @@
 var init_model = require('./model.js');
+var validator = require('validator');
+var errors = require('../lib/errors.js');
+var _ = require('underscore');
 
-var API = function(nconf, model){
+var API = function(nconf, model, log){
 	this.nconf = nconf;
 	this.model = model;
+    this.log = log;
 }
 
 function _requireAuthorization (user_id, toplevel_callback, callback) {
@@ -17,7 +21,18 @@ function _requireAuthorization (user_id, toplevel_callback, callback) {
 }
 
 API.prototype.login = function(username, password, callback) {
-
+    var self = this;
+    self.model.Users.findOne( {'username' : username}, function(err, user){
+        if (user && user.password == password) {
+            callback(undefined, { id: user.id }, { user_id: user.id });
+        } else {
+            var error = errors.create('auth_incorrect_password', 'Incorrect login/password', {
+                code: 403
+            });
+            console.log(error);
+            callback(error);
+        }
+    });
 }
 
 API.prototype.register = function(username, email, password, callback) {
@@ -93,6 +108,29 @@ API.prototype.register = function(username, email, password, callback) {
         callback(error);
         return;
     }
+
+    self.model.Users.findOne({username : username}, function(err, user){
+        if(user){
+            var error = errors.create('auth_incorrect_register_data', 'Username already exists', {
+                code: 403
+            });
+            callback(error);
+        } else {
+            self.model.Users.create({ username : username,
+                                      email : email,
+                                      password: password
+            }, function (err, user) {
+                if (err) {
+                    var error = errors.create('auth_incorrect_register_data', 'User create error', {
+                        code: 403
+                    });
+                    callback(error);
+                } else {
+                    callback(undefined, user);
+                }
+            });
+        }
+    });
 }
 
 API.prototype.createCustomer = function(user_id, note_text, note_date, callback) {
@@ -134,7 +172,7 @@ API.prototype.deleteCustomer = function(user_id, note_text, note_date, callback)
 module.exports = function(nconf, log, callback){
 	init_model(nconf, log, function(error, model){
 		if(!error){
-			var api = new API(nconf, model);
+			var api = new API(nconf, model, log);
 			callback(undefined, api);
 		} else {
 			callback(error);			
