@@ -7,7 +7,8 @@ var cors = require('express-cors')
 
 var package_json = require('./package.json');
 
-var init_api = require('./lib/api.js');
+var init_api = require('./lib/api');
+var Router = require('./lib/router');
 
 nconf
     .argv()
@@ -15,22 +16,26 @@ nconf
     .file({file: './defaults.json'});
 
 var log = bunyan.createLogger({
-    name: package_json['name'],
-    streams: [
-        {
-            level: 'info',
-            stream: process.stdout
-        },
-        {
-            level: nconf.get('log:level'),
-            type: 'rotating-file',
-            path: nconf.get('log:path')
-        }
-    ]
+   name: package_json['name'],
+   streams: [
+       {
+           level: 'info',
+           stream: process.stdout
+       },
+       {
+           level: nconf.get('log:level'),
+           type: 'rotating-file',
+           path: nconf.get('log:path')
+       }
+   ]
 });
 
 init_api(nconf, log, function (error, api) {
 	var app = express();
+    var router = new Router(app, {
+        target: api,
+        log: log
+    });
 
 	app.on('uncaughtException', function (req, res, route, err) {
 	    var a_log = req.log ? req.log : log;
@@ -69,6 +74,77 @@ init_api(nconf, log, function (error, api) {
 	    next();
 	});
 
+    router.post('/login', {
+        parameters: {
+            username: router.String,
+            password: router.String
+        },
+        call: [api.login, 'username', 'password']
+    });
+
+    router.post('/register', {
+        parameters: {
+            username: router.String,
+            email: router.String,
+            password: router.String
+        },
+        call: [api.register, 'username', 'email', 'password']
+    });
+
+    router.post('/add_customer', {
+        parameters: {
+            firstName: 	 router.String,
+            lastName:    router.String,
+            dateOfBirth: router.String,
+            companyName: router.String,
+            mobilePhone: router.String,
+            workPhone: 	 router.String,
+            skype: 	 	 router.String,
+        },
+        call: [ api.createCustomer, 'session:user_id', 
+        							'firstName', 
+        							'lastName', 
+        							'dateOfBirth', 
+        							'companyName', 
+        							'mobilePhone',
+                                    'workPhone',
+        							'skype']
+    });
+
+    router.get('/get_customers', {
+        parameters: {
+        },
+        call: [ api.getAllCustomers, 'session:user_id']
+    });
+
+    router.post('/update_customer/:customer_id', {
+        parameters: {
+            customer_id : router.Integer,
+            firstName: 	  router.String,
+            lastName:     router.String,
+            dateOfBirth:  router.String,
+            companyName:  router.String,
+            mobilePhone:  router.String,
+            workPhone: 	  router.String,
+            skype: 	 	  router.String,
+        },
+        call: [ api.updateCustomer, 'session:user_id',
+                                    'customer_id', 
+        							'firstName', 
+        							'lastName', 
+        							'dateOfBirth', 
+        							'mobilePhone',
+                                    'workPhone',
+                                    'companyName', 
+        							'skype']
+    });
+
+    router.delete('/delete_customer/:customer_id', {
+        parameters: {
+            customer_id : router.Integer,
+        },
+        call: [ api.deleteCustomer, 'session:user_id', 'customer_id']
+    });
 
 	app.listen(nconf.get('port'), function () {
 	    console.log('Listening %s at %d', package_json['name'], nconf.get('port'));

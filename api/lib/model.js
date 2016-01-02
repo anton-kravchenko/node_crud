@@ -1,12 +1,14 @@
 var mongoose = require('mongoose'),
 	mongodbUri = require('mongodb-uri'),
-	autoIncrement = require('mongoose-auto-increment');
+	autoIncrement = require('mongoose-auto-increment'),
+	model = {};
 
 module.exports = function(nconf, log, callback){
 	var mongo_log = log.child({
 		component : 'mongo'
 	});
-	var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
+
+	var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
                 replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
                 
 	var uri = mongodbUri.format(
@@ -36,6 +38,7 @@ module.exports = function(nconf, log, callback){
 		var Schema = mongoose.Schema;
 	  	var userSchema = new Schema({
 	  		_id		 : Schema.Types.ObjectId,
+	  		username : String,
 	  		email	 : String, 
 	  		password : String, 
 	  		salt	 : String,
@@ -52,9 +55,8 @@ module.exports = function(nconf, log, callback){
 			id			: Schema.Types.ObjectId,
 			firstName	: String, 
 			lastName	: String, 
-			dateOfBirth	: Date,
+			dateOfBirth	: String,
 
-			companyName	: String, 
 			mobilePhone	: String, 
 			workPhone	: String, 
 			companyName	: String, 
@@ -64,6 +66,9 @@ module.exports = function(nconf, log, callback){
 		customerSchema.plugin(autoIncrement.plugin, 'Customer')
 		var Customers = mongoose.model('Customer', customerSchema);
 
-		callback(undefined, Users);
+		model.Users = Users;
+		model.Customers = Customers;
+
+		callback(undefined, model);
 	}
 )};
