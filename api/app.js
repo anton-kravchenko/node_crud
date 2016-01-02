@@ -122,18 +122,20 @@ init_api(nconf, log, function (error, api) {
             customer_id : router.Integer,
             firstName: 	  router.String,
             lastName:     router.String,
-            dateOfBirth:  router.Date,
+            dateOfBirth:  router.String,
             companyName:  router.String,
             mobilePhone:  router.String,
             workPhone: 	  router.String,
             skype: 	 	  router.String,
         },
-        call: [ api.updateCustomer, 'session:user_id', 
+        call: [ api.updateCustomer, 'session:user_id',
+                                    'customer_id', 
         							'firstName', 
         							'lastName', 
         							'dateOfBirth', 
-        							'companyName', 
         							'mobilePhone',
+                                    'workPhone',
+                                    'companyName', 
         							'skype']
     });
 

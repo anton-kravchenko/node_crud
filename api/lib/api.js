@@ -177,13 +177,41 @@ API.prototype.getAllCustomers = function(user_id, callback) {
 
 }
 
-API.prototype.updateCustomer = function(user_id, firstName, lastName, dateOfBirth, mobilePhone, workPhone, companyName, skype, callback) {
+API.prototype.updateCustomer = function(user_id, customer_id, firstName, lastName, dateOfBirth, mobilePhone, workPhone, companyName, skype, callback) {
     var self = this;
 
     _requireAuthorization(user_id, callback, function(){
+        self.model.Customers.findOne({ _creator : user_id, _id: customer_id}, function (err, user) {
+            if (!err && user) {
+                user.firstName = firstName;
+                user.lastName = lastName;
+                user.dateOfBirth = dateOfBirth;
+                user.mobilePhone = mobilePhone;
+                user.workPhone = workPhone;
+                user.companyName = companyName;
+                user.skype = skype;
 
+                user.save(function (err, user) {
+                    if (err) {
+                        var error = errors.create('incorrect_customer_data', 'Customer create error', {
+                            code: 403
+                        });
+                        callback(error);
+                    } else {
+                       callback(undefined, user);
+                    }
+                });
+            } else {
+                var error = errors.create('cant_find_and_update_customer', 'Update customer error.', {
+                    code: 403
+                });
+                console.log(error);
+                callback(error);
+            }
+
+            
+        });
     });
-
 }
 
 API.prototype.deleteCustomer = function(user_id, customer_id, callback) {
