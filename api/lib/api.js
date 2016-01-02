@@ -177,7 +177,7 @@ API.prototype.getAllCustomers = function(user_id, callback) {
 
 }
 
-API.prototype.updateCustomer = function(user_id, note_text, note_date, callback) {
+API.prototype.updateCustomer = function(user_id, firstName, lastName, dateOfBirth, mobilePhone, workPhone, companyName, skype, callback) {
     var self = this;
 
     _requireAuthorization(user_id, callback, function(){
@@ -186,13 +186,22 @@ API.prototype.updateCustomer = function(user_id, note_text, note_date, callback)
 
 }
 
-API.prototype.deleteCustomer = function(user_id, note_text, note_date, callback) {
+API.prototype.deleteCustomer = function(user_id, customer_id, callback) {
     var self = this;
 
     _requireAuthorization(user_id, callback, function(){
-
+        self.model.Customers.findOneAndRemove({'_id' : customer_id}, function (err, result){
+            if (!err) {
+                callback(undefined, { status: 'ok' });
+            } else {
+                var error = errors.create('cant_delete_customer', 'Remove customer error.', {
+                    code: 403
+                });
+                console.log(error);
+                callback(error);
+            }
+        });
     });
-
 }
 
 module.exports = function(nconf, log, callback){
