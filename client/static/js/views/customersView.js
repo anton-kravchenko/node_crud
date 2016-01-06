@@ -38,7 +38,7 @@ define([
             this.popup = new EditCustomerPopup(false, customers, model);
             $('#app').append(this.popup.render().el);  
         },
-        fillCustomers: function(customers){
+        fillCustomers: function(customers,  newCustomers){
             var self = this;
             for(i in customers){
 
@@ -54,16 +54,18 @@ define([
 
                 dateOfBirth =  dateOfBirth.getFullYear() + '-' + day  + '-' + month;
 
-                this.customers.add({
-                    _id : customers[i]._id,
-                    firstName : customers[i].name.first,
-                    lastName : customers[i].name.last,
-                    dateOfBirth : dateOfBirth,
-                    mobilePhone : customers[i].phone.mobile,
-                    workPhone : customers[i].phone.work,
-                    companyName : customers[i].companyName,
-                    skype : customers[i].skype
-                });
+                if(newCustomers){
+                    this.customers.add({
+                        _id : customers[i]._id,
+                        firstName : customers[i].firstName || customers[i].name.first,
+                        lastName : customers[i].lastName || customers[i].name.last,
+                        dateOfBirth : dateOfBirth,
+                        mobilePhone : customers[i].mobilePhone || customers[i].phone.mobile,
+                        workPhone : customers[i].workPhone || customers[i].phone.work,
+                        companyName : customers[i].companyName,
+                        skype : customers[i].skype
+                    });
+                }
 
                 $('.customers_container').append(TemplateHandler.customer_template(this.customers.at(i).toJSON()));
 
@@ -92,13 +94,18 @@ define([
             var self = this;
             API.getCustomers(function(data){
                 var customers = data.customers;
-                self.fillCustomers(customers);
+                self.fillCustomers(customers, true);
             });
         },
 		render: function () {
+            var self = this;
             $(this.el).html(this.template());
 
             this.getAllCustomers();
+            $('.customers_container').on('updateView', function(){
+                $('.customer_container').remove();
+                self.fillCustomers(self.customers.toJSON(), false);
+            })
 		},
 
 	});

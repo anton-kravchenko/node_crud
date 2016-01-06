@@ -39,6 +39,7 @@ define([
             }, function(err){   
                 console.log(err);
             });
+            $('.customers_container').trigger('updateView');
         },
         updateCustomer: function(){
             var self = this;
@@ -49,6 +50,7 @@ define([
             }, function(err){   
                 console.log(err);
             });
+            $('.customers_container').trigger('updateView');
         },
         initFormData: function(){
             $('#firstName').val(this.model.get('firstName'));
@@ -62,6 +64,9 @@ define([
             if(day < 10){
                 day = '0' + day;
             }
+            if(month == 0){
+                month = 1;
+            }
             if(month < 10){
                 month = '0' + month;
             }
@@ -73,8 +78,8 @@ define([
             var workPhone = this.model.get('workPhone').split('-');
             
             for(var i = 0; i < 4; i++){
-                $('#mobilePhone' + i).val(mobilePhone[i]);
-                $('#workPhone' + i).val(workPhone[i]);
+                $('#mobilePhone' + (i+1) ).val(mobilePhone[i]);
+                $('#workPhone' + (i+1) ).val(workPhone[i]);
             }
         },
         grepData: function(){
