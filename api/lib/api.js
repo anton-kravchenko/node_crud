@@ -137,11 +137,15 @@ API.prototype.createCustomer = function(user_id, firstName, lastName, dateOfBirt
     var self = this;
     _requireAuthorization(user_id, callback, function(){
         self.model.Customers.create({   _creator : user_id,
-                                        firstName : firstName,
-                                        lastName : lastName,
-                                        dateOfBirth: dateOfBirth,
-                                        mobilePhone: mobilePhone,
-                                        workPhone: workPhone,
+                                        name :{
+                                            first : firstName,
+                                            last : lastName
+                                        },
+                                        dateOfBirth: new Date(dateOfBirth),
+                                        phone: {
+                                            mobile: mobilePhone,
+                                            work: workPhone
+                                        },
                                         companyName: companyName,
                                         skype: skype
         }, function (err, user) {
@@ -183,11 +187,11 @@ API.prototype.updateCustomer = function(user_id, customer_id, firstName, lastNam
     _requireAuthorization(user_id, callback, function(){
         self.model.Customers.findOne({ _creator : user_id, _id: customer_id}, function (err, user) {
             if (!err && user) {
-                user.firstName = firstName;
-                user.lastName = lastName;
-                user.dateOfBirth = dateOfBirth;
-                user.mobilePhone = mobilePhone;
-                user.workPhone = workPhone;
+                user.name.first = firstName;
+                user.name.last = lastName;
+                user.dateOfBirth = new Date(dateOfBirth);
+                user.phone.mobile = mobilePhone;
+                user.phone.work = workPhone;
                 user.companyName = companyName;
                 user.skype = skype;
 

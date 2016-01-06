@@ -49,20 +49,37 @@ module.exports = function(nconf, log, callback){
 		userSchema.plugin(autoIncrement.plugin, 'User');
 		var Users = mongoose.model('User', userSchema);
 
+		function personPlugin (schema, options) {
+		  	schema.add({
+	  			name :{
+					first	: String, 
+					last	: String, 
+				},
+				dateOfBirth	: Date
+			});
+		  
+		  	schema.pre('save', function (next) {
+		    	this.lastMod = new Date
+		    	next()
+		  	})
+		  
+		  	if (options && options.index) {
+		    	schema.path('person').index(options.index);
+		  	}
+		}
 
 		var customerSchema = new Schema({
 			_creator    : { type: Number, ref: 'User' },
 			id			: Schema.Types.ObjectId,
-			firstName	: String, 
-			lastName	: String, 
-			dateOfBirth	: String,
-
-			mobilePhone	: String, 
-			workPhone	: String, 
+			phone: {
+				mobile : String,
+				work : String
+			},
 			companyName	: String, 
 			skype		: String,
 		});
 
+		customerSchema.plugin(personPlugin);
 		customerSchema.plugin(autoIncrement.plugin, 'Customer')
 		var Customers = mongoose.model('Customer', customerSchema);
 
