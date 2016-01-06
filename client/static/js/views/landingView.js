@@ -152,7 +152,7 @@ define([
                 //console.log('Trying to register user with data: ', userData);
 				API.register(userData, function(result){
 					if(result.hasOwnProperty('id')){
-						app.navigate('notes', true);
+						app.navigate('customers', true);
 					}
 				}, function(result) {
 				    var error = JSON.parse(result.responseText);
