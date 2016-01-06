@@ -36,10 +36,10 @@ define([
                 console.log(customer);
                 self.customers.add(customer);
                 self.closePopup();
+                $('.customers_container').trigger('updateView');
             }, function(err){   
                 console.log(err);
             });
-            $('.customers_container').trigger('updateView');
         },
         updateCustomer: function(){
             var self = this;
