@@ -141,7 +141,7 @@ API.prototype.createCustomer = function(user_id, firstName, lastName, dateOfBirt
                                             first : firstName,
                                             last : lastName
                                         },
-                                        dateOfBirth: dateOfBirth,
+                                        dateOfBirth: new Date(dateOfBirth),
                                         phone: {
                                             mobile: mobilePhone,
                                             work: workPhone
@@ -189,7 +189,7 @@ API.prototype.updateCustomer = function(user_id, customer_id, firstName, lastNam
             if (!err && user) {
                 user.name.first = firstName;
                 user.name.last = lastName;
-                user.dateOfBirth = dateOfBirth;
+                user.dateOfBirth = new Date(dateOfBirth);
                 user.phone.mobile = mobilePhone;
                 user.phone.work = workPhone;
                 user.companyName = companyName;

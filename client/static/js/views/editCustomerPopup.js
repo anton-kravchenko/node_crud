@@ -50,6 +50,33 @@ define([
                 console.log(err);
             });
         },
+        initFormData: function(){
+            $('#firstName').val(this.model.get('firstName'));
+            $('#lastName').val(this.model.get('lastName'));
+            $('#companyName').val(this.model.get('companyName'));
+            $('#skype').val(this.model.get('skype'));
+
+            var dateOfBirth = new Date(this.model.get('dateOfBirth'));
+            var day = dateOfBirth.getDay();
+            var month = dateOfBirth.getMonth();
+            if(day < 10){
+                day = '0' + day;
+            }
+            if(month < 10){
+                month = '0' + month;
+            }
+
+            $('#dateOfBirth').val(  dateOfBirth.getFullYear() + '-' + 
+                                    day  + '-' +
+                                    month);
+            var mobilePhone = this.model.get('mobilePhone').split('-');
+            var workPhone = this.model.get('workPhone').split('-');
+            
+            for(var i = 0; i < 4; i++){
+                $('#mobilePhone' + i).val(mobilePhone[i]);
+                $('#workPhone' + i).val(workPhone[i]);
+            }
+        },
         grepData: function(){
             this.model.set({    
                 firstName:    $('#firstName').val(),
@@ -70,7 +97,7 @@ define([
         },
   		initialize: function (createNewCustomer, customers, model) {
             this.customers = customers;
-			this.createNewCustomer = createNewCustomer;
+            this.createNewCustomer = createNewCustomer;
             if(this.createNewCustomer){
                 this.model = new CustomerModel();
             } else {
@@ -82,6 +109,7 @@ define([
                 $('.submit_new_customer').addClass('update_customer');
                 $('.submit_new_customer').text('Update');
                 $('.submit_new_customer').removeClass('submit_new_customer');
+                this.initFormData();
             }
         }
     });

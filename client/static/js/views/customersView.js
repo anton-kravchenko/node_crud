@@ -41,13 +41,26 @@ define([
         fillCustomers: function(customers){
             var self = this;
             for(i in customers){
+
+                var dateOfBirth = new Date(customers[i].dateOfBirth);
+                var day = dateOfBirth.getDay();
+                var month = dateOfBirth.getMonth();
+                if(day < 10){
+                    day = '0' + day;
+                }
+                if(month < 10){
+                    month = '0' + month;
+                }
+
+                dateOfBirth =  dateOfBirth.getFullYear() + '-' + day  + '-' + month;
+
                 this.customers.add({
                     _id : customers[i]._id,
-                    firstName : customers[i].firstName,
-                    lastName : customers[i].lastName,
-                    dateOfBirth : customers[i].dateOfBirth,
-                    mobilePhone : customers[i].mobilePhone,
-                    workPhone : customers[i].workPhone,
+                    firstName : customers[i].name.first,
+                    lastName : customers[i].name.last,
+                    dateOfBirth : dateOfBirth,
+                    mobilePhone : customers[i].phone.mobile,
+                    workPhone : customers[i].phone.work,
                     companyName : customers[i].companyName,
                     skype : customers[i].skype
                 });

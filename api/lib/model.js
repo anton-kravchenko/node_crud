@@ -55,7 +55,7 @@ module.exports = function(nconf, log, callback){
 					first	: String, 
 					last	: String, 
 				},
-				dateOfBirth	: String
+				dateOfBirth	: Date
 			});
 		  
 		  	schema.pre('save', function (next) {
