@@ -1,3 +1,4 @@
+cd api/ &&
 export port="3110" &&
 
 export log_level="debug"  &&
