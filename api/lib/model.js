@@ -17,11 +17,11 @@ module.exports = function(nconf, log, callback){
         	password : nconf.get('mongo_db_password'),
             hosts: [
                 {
-                    host: nconf.get('mongo_db:host'),
-                    port: nconf.get('mongo_db:port')
+                    host: nconf.get('mongo_db_host'),
+                    port: nconf.get('mongo_db_port')
                 }
             ],
-            database: nconf.get('mongo_db:db_name'),
+            database: nconf.get('mongo_db_db_name'),
         }
 	);
 
@@ -33,7 +33,7 @@ module.exports = function(nconf, log, callback){
 	db.on('error', console.error.bind(console, 'connection error:'));
 
 	db.once('open', function () {
-		mongo_log.info('Open ' + nconf.get('mongo_db:db_name') + ' connection.');
+		mongo_log.info('Open ' + nconf.get('mongo_db_db_name') + ' connection.');
 
 		var Schema = mongoose.Schema;
 	  	var userSchema = new Schema({

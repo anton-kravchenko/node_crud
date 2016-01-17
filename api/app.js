@@ -23,7 +23,7 @@ var log = bunyan.createLogger({
            stream: process.stdout
        },
        {
-           level: nconf.get('log:level'),
+           level: nconf.get('log_level'),
            type: 'rotating-file',
            path: nconf.get('log:path')
        }
@@ -62,7 +62,7 @@ init_api(nconf, log, function (error, api) {
 
 	app.use(cors({
 	    allowedOrigins: [
-	        nconf.get('frontend:host'), nconf.get('backend:host')
+	        nconf.get('frontend_host'), nconf.get('backend:host')
 	    ]
 	}));
 
